@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XanderCoin Clicker</title>
+    <link rel="stylesheet" href="style.css">  <!-- Подключаем CSS -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+
+    <h1>Добро пожаловать в XanderCoin!</h1>
+    <p class="balance">Баланс: <span id="balance">0</span> XanderCoin</p>
+    <button class="button" onclick="clickCoin()">💰 Клик!</button>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function updateBalance(balance) {
+            document.getElementById("balance").innerText = balance;
+        }
+
+        function clickCoin() {
+            fetch("https://your-server.com/click", {  // Укажи свой сервер!
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ user_id: tg.initDataUnsafe.user.id })
+            })
+            .then(response => response.json())
+            .then(data => updateBalance(data.balance))
+            .catch(error => console.error("Ошибка:", error));
+        }
+
+        fetch("https://your-server.com/get_balance", { 
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user_id: tg.initDataUnsafe.user.id })
+        })
+        .then(response => response.json())
+        .then(data => updateBalance(data.balance))
+        .catch(error => console.error("Ошибка:", error));
+    </script>
+
+</body>
+</html>
